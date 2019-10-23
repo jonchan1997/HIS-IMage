@@ -42,7 +42,7 @@ double getIntensity(double red, double green, double blue)
 	double * max = std::max_element(rgb, rgb+3);
 	double * min = std::min_element(rgb, rgb+3);
 	double delta = *max - *min;
-	double L = (delta)/2;
+	double L = (rgb[0] + rgb[1] + rgb[2])/3;
 	return L;
 }
 double getSaturation(double red, double green, double blue)
