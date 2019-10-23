@@ -42,7 +42,7 @@ double getIntensity(double red, double green, double blue)
 	double * max = std::max_element(rgb, rgb+3);
 	double * min = std::min_element(rgb, rgb+3);
 	double delta = *max - *min;
-	double L = (*max + *min)/2;
+	double L = (delta)/2;
 	return L;
 }
 double getSaturation(double red, double green, double blue)
@@ -52,7 +52,7 @@ double getSaturation(double red, double green, double blue)
 	double * min = std::min_element(rgb, rgb+3);
 	double delta = *max - *min;
 	double L = (*max + *min)/2;
-	if(max = min)
+	if(delta == 0)
 	{
 		return 0;
 	}
@@ -69,7 +69,8 @@ int main(int argc, char* argv[])
 	std::string fileName;
 	while(!(QUIT))
 	{
-        std::cout << "REMEMBER TYPE QUIT TO QUIT!!!" << std::endl;
+     
+	    std::cout << "REMEMBER TYPE QUIT TO QUIT!!!" << std::endl;
 		std::cout << "Please ENTER a filename:" << std::endl;
 		std::cout << std::endl;
 		std::cout << "~";
@@ -103,10 +104,13 @@ int main(int argc, char* argv[])
 			double hue[len];
 			double intensity[len];
 			double saturation[len];
+			double avgHue = 0;
+			double avgInten = 0;
+			double avgSat = 0;
 			fread(buffer, sizeof(unsigned char), size, pic);
             //move by pixel
 			size_t p = 0;//pixel value
-			for(size_t i = 0; (i + 3) < size; i+= 3)
+			for(size_t i = 0; (i + 2) < size; i += 3)
             {
 				int r = (int)buffer[i];
 				int g = (int)buffer[i + 1];
@@ -121,8 +125,23 @@ int main(int argc, char* argv[])
 				(unsigned char)buffer[i];
 				(unsigned char)buffer[i + 1];
 				(unsigned char)buffer[i + 2];
+				dataA[i]= (buffer[i] * (unsigned char)intensity[p]);
+				dataA[i + 1]= (buffer[i + 1] * (unsigned char)intensity[p]);
+				dataA[i + 2]= (buffer[i + 2] * (unsigned char)intensity[p]);
+				avgHue += hue[p];
+				avgInten += intensity[p];
+				avgSat += saturation[p];
 				p++;
+
             }
+			std::cout << "Length: " <<(double)len << std::endl;
+			avgHue = avgHue/(double)len;
+			avgInten = avgInten/(double)len;
+			avgSat = avgSat/(double)len;
+			std::cout << "Average Hue: " << avgHue << std::endl;
+			std::cout << "Average Intentsity: " << avgInten << std::endl;
+			std::cout << "Average Saturation: " << avgSat << std::endl;
+
 			/**
 			//output
 			for(size_t i = 0; i < size; i ++)
@@ -135,7 +154,7 @@ int main(int argc, char* argv[])
 			**/
 			std::cout << sizeof(buffer) << std::endl;
 			std::cout << size << std::endl;
-            //fwrite(dataA, sizeof(unsigned char), size, picA);
+            fwrite(dataA, sizeof(unsigned char), size, picA);
 			//fwrite(dataB, sizeof(unsigned char), size, picB);
 			//fwrite(dataC, sizeof(unsigned char), size, picC);
             fclose(pic);
