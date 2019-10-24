@@ -97,9 +97,9 @@ int main(int argc, char* argv[])
             size_t size = ftell(pic);
             rewind(pic);
             unsigned char *buffer = new unsigned char[size];
-			unsigned char *dataA = new unsigned char[size];
-			unsigned char *dataB = new unsigned char[size];
-			unsigned char *dataC = new unsigned char[size];
+			//unsigned char *dataA = new unsigned char[size];
+			//unsigned char *dataB = new unsigned char[size];
+			//unsigned char *dataC = new unsigned char[size];
 			size_t len = size/3;
 			double hue[len];
 			double intensity[len];
@@ -154,7 +154,9 @@ int main(int argc, char* argv[])
 			**/
 			std::cout << sizeof(buffer) << std::endl;
 			std::cout << size << std::endl;
-            fwrite(dataA, sizeof(unsigned char), size, picA);
+            fwrite((unsigned char)hue, sizeof(unsigned char), len, picA);
+			fwrite((unsigned char)saturation, sizeof(unsigned char), len, picB);
+			fwrite((unsigned char)intensity, sizeof(unsigned char), len, picB);
 			//fwrite(dataB, sizeof(unsigned char), size, picB);
 			//fwrite(dataC, sizeof(unsigned char), size, picC);
             fclose(pic);
@@ -163,9 +165,9 @@ int main(int argc, char* argv[])
 			fclose(picC);
 			fileName.clear();
 			delete [] buffer;
-			delete [] dataA;
-			delete [] dataB;
-			delete [] dataC;
+			//delete [] dataA;
+			//delete [] dataB;
+			//delete [] dataC;
 		}
 		continue;
 	}
